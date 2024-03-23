@@ -386,7 +386,18 @@ Benefits of ownership:
 - `thread` module has `spawn` function which receives a `closure` and returns a `JoinHandle<T>`
 - Process/thread scheduling: some comments online are that MacOS handles it and in most cases we do not need to bother
 
-## Scope Function
-- In Rust, scopes play a crucial role in managing resources and ensuring safety, especially in the context of multithreading. Rust's ownership and borrowing system helps prevent data races and other concurrency-related issues. Scopes in Rust are used in conjunction with ownership and borrowing rules to control the lifetime and accessibility of data.In the context of multithreading, Rust provides the std::thread module for creating and managing threads. When working with threads, scopes help define the lifetime of borrows and ownership, ensuring that references to data are valid throughout the thread's execution. This is essential for preventing data races and other concurrency bugs. Key points: 
+## Scopeed Threads
+- In Rust, scopes play a crucial role in managing resources and ensuring safety, especially in the context of multithreading. Rust's ownership and borrowing system helps prevent data races and other concurrency-related issues.
+
+- Scopes in Rust are used in conjunction with ownership and borrowing rules to control the lifetime and accessibility of data. In the context of multithreading, Rust provides the std::thread module for creating and managing threads. When working with threads, scopes help define the lifetime of borrows and ownership, ensuring that references to data are valid throughout the thread's execution. This is essential for preventing data races and other concurrency bugs. 
 
 - Scope gaurantees all threads will be joined automatically
+- Scope also has explicite ways to join and get a handle
+
+## Mutex
+    - `std::sync:mutex` provides a way to lock data by a thread for exclusive use
+    - lock to access/mutate data
+    - unlocks implicitely after scope of thread is finished
+    - if a thread locks Mutex but panics, other threads won't be able to unlock it unless Mutex is dropped.
+    - able to use a loop and try_unlock on Mutex, if lock obtained do work, or sleep if nothing happened
+    - play around with joining (waiting for thread to finish) or not joining and see what happens
