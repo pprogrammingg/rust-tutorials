@@ -395,9 +395,38 @@ Benefits of ownership:
 - Scope also has explicite ways to join and get a handle
 
 ## Mutex
-    - `std::sync:mutex` provides a way to lock data by a thread for exclusive use
-    - lock to access/mutate data
-    - unlocks implicitely after scope of thread is finished
-    - if a thread locks Mutex but panics, other threads won't be able to unlock it unless Mutex is dropped.
-    - able to use a loop and try_unlock on Mutex, if lock obtained do work, or sleep if nothing happened
-    - play around with joining (waiting for thread to finish) or not joining and see what happens
+
+- `std::sync:mutex` provides a way to lock data by a thread for exclusive use
+- lock to access/mutate data
+- unlocks implicitely after scope of thread is finished
+- if a thread locks Mutex but panics, other threads won't be able to unlock it unless Mutex is dropped.
+- able to use a loop and try_unlock on Mutex, if lock obtained do work, or sleep if nothing happened
+- play around with joining (waiting for thread to finish) or not joining and see what happens
+
+
+# MPSC
+- Multiple Producers Singel Consumer is a message passing technique to aid multi-threaded apps
+- could be used in a single-threaded app, generally speaking in multi-threaded
+- if drop sender or receiver or both channel just closes, cannot send to it anymore
+- `.recv` is a blocking op, use `.recv_timeout` to be non-blocking for a certain amount of time
+
+
+# ForkJoin, Pipeline and worker patterns
+- fork join: `par_iter` of Rayon crate for parallel iteration
+```rust
+    use rayon::prelude::*;
+
+    fn main() {
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        let sum: i32 = data.par_iter().map(|&x| x).sum();
+
+        println!("Sum: {}", sum);
+    }
+``` 
+- worker pattern: pretty much thread spawning
+
+# Sending Requests
+- Crates like `reqwest` (blocking is an optional cargo, need to install it explicitely), `rust-curl` (binding to c-curl), `hyper`, `ureq` (just blocking IO no async - so fairly light)
+- `mockoon` for mocking
+- 
