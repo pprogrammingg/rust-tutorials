@@ -1,16 +1,8 @@
-use std::env;
+use std::{env, process};
 
-use minigrep::Config;
+use practice_rust::minigrep::{self, Config};
 
-mod guessing_game;
-mod hempcrete_community;
-mod http_reqwest_example;
-mod minigrep;
-mod mpsc_example;
-mod multi_threaded_basic;
-mod multi_threaded_mutex;
-mod multi_threaded_scope;
-mod traits_tutorial;
+
 
 // use guessing_game::guessing_game;
 // use hempcrete_community::build_hempcrete_community;
@@ -46,7 +38,10 @@ fn main() {
 
     //-----
     // minigrep
-    let config = Config::new(&args);
+    let config = Config::build(&args).unwrap_or_else(|err| { println!("Problem parsing the args, {err}"); process::exit(1)});
 
-    minigrep::minigrep(config);
+    if let Err(e) = minigrep::run(config) {
+        println!("Application Error {e}");
+        process::exit(1);
+    }
 }

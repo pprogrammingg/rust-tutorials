@@ -1,23 +1,28 @@
-use std::fs;
+use std::{error::Error, fs};
+
 pub struct Config {
     query: String,
-    file_path: String
-}
-
-pub fn minigrep(config: Config) {
-    let contents = fs::read_to_string(config.file_path).expect("Should have been able to read the file!");
-
-    println!("with text \n {contents}");
+    file_path: String,
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Config {
+    pub fn build(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
-            panic!("Not enough arguments are provided in the command line!");
+            return Err("Not enough arguments in the command line!");
         }
-        Config {
+        
+        Ok(Config {
             query: args[1].clone(),
-            file_path: args[2].clone()
-        }
+            file_path: args[2].clone(),
+        })
     }
+}
+
+pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
+    let contents =
+        fs::read_to_string(config.file_path)?;
+
+    println!("with text \n {contents}");
+
+    Ok(())
 }
