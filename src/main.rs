@@ -2,8 +2,6 @@ use std::{env, process};
 
 use practice_rust::minigrep::{self, Config};
 
-
-
 // use guessing_game::guessing_game;
 // use hempcrete_community::build_hempcrete_community;
 // use mpsc_example::send_from_main_receive_in_thread;
@@ -38,7 +36,10 @@ fn main() {
 
     //-----
     // minigrep
-    let config = Config::build(&args).unwrap_or_else(|err| { println!("Problem parsing the args, {err}"); process::exit(1)});
+    let config = Config::build(&args).unwrap_or_else(|err| {
+        println!("Problem parsing the args, {err}");
+        process::exit(1)
+    });
 
     if let Err(e) = minigrep::run(config) {
         println!("Application Error {e}");

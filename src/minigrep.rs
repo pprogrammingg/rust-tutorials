@@ -10,7 +10,7 @@ impl Config {
         if args.len() < 3 {
             return Err("Not enough arguments in the command line!");
         }
-        
+
         Ok(Config {
             query: args[1].clone(),
             file_path: args[2].clone(),
@@ -18,9 +18,8 @@ impl Config {
     }
 }
 
-pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
-    let contents =
-        fs::read_to_string(config.file_path)?;
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
 
     println!("with text \n {contents}");
 
