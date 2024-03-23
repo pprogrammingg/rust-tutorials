@@ -429,4 +429,8 @@ Benefits of ownership:
 # Sending Requests
 - Crates like `reqwest` (blocking is an optional cargo, need to install it explicitely), `rust-curl` (binding to c-curl), `hyper`, `ureq` (just blocking IO no async - so fairly light)
 - `mockoon` for mocking
+
+# Cargo
+- `cargo check` is faster than `cargo build` useful when you want to see whether code can compile
+- `cargo build --release` is a lengthier process that does some optimizations. When benchmarking code use the release verison
 - 
