@@ -8,3 +8,5 @@ pub mod multi_threaded_basic;
 pub mod multi_threaded_mutex;
 pub mod multi_threaded_scope;
 pub mod traits_tutorial;
+
+pub mod leetcode;
