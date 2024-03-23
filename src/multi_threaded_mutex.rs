@@ -1,10 +1,8 @@
-use std::time::Duration;
-use std::{sync::Mutex, ops::AddAssign};
 use std::thread::{scope, sleep};
-
+use std::time::Duration;
+use std::{ops::AddAssign, sync::Mutex};
 
 pub fn mutex_exmaple() {
-
     let score = Mutex::new(0u16);
 
     let my_func = || {
@@ -25,7 +23,7 @@ pub fn mutex_exmaple() {
         // usually no need to drop as exiting scope naturally drops the lock on mutex.
         // unless there is a panic! or something that forces us to release the mutex
 
-        // drop(data); 
+        // drop(data);
         // panic!("thread 2 paniced!!!");
 
         loop {
@@ -50,13 +48,10 @@ pub fn mutex_exmaple() {
         // let handle2 = scope.spawn(my_func2).join();
         scope.spawn(my_func);
         scope.spawn(my_func2); // thanks to scoped thread with automatically join
-        // if handle2.is_err(){ // more graceful exit
-        //         println!("Handle thread 2 error here!");
-        // }
+                               // if handle2.is_err(){ // more graceful exit
+                               //         println!("Handle thread 2 error here!");
+                               // }
     });
 
     println!("score is {:?}", score.lock().unwrap());
-
-
-
 }

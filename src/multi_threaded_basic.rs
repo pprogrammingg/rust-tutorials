@@ -1,10 +1,9 @@
 // Example demonstrating multi-threaded programming in Rust
- 
+
 use std::{thread, time::Instant};
 
 // Function that says hello in a separate thread
 pub fn no_thread_example() {
-
     let mut x: u128 = 0;
 
     for i in 0..50 {
@@ -20,7 +19,7 @@ pub fn multi_threaded_example() {
 
         for i in 0..500 {
             x += i;
-	        println!("value of i  is : {i}");
+            println!("value of i  is : {i}");
         }
         println!("value of x is : {x}");
     };
@@ -32,8 +31,8 @@ pub fn multi_threaded_example() {
     // Spawn threads
     let handle = thread::spawn(thread_fn);
     let handle2 = thread::spawn(thread_fn);
-    
-    loop{
+
+    loop {
         no_thread_example();
         if handle.is_finished() && handle2.is_finished() {
             println!("Both workers completed!");
