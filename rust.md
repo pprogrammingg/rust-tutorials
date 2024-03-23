@@ -1,6 +1,6 @@
 # Gotchas of RUST
 
-##Numbers
+## Numbers
 `let x = 1_000.000_1` is f64 by default not f32. To get f32 need to do this `let x: f32 = 1_000.000_1f32` (explicit declaration)
 explicitely specifying for f32 (resulting in taking half as much space than f64) because a performance boost of large arrays of 
 such numbers, as for individual values, compiler makes the necessary optimizations
@@ -23,7 +23,7 @@ Type of unknown size will go on heap, and pointer of usize is returned
 actual value of string will be on the heap.
 
 ## Copy vs Move
-fixed size values which go on Stack can be copied but copying heap is expensive, instead Rust moves those
+fixed size values which go on Stack can be copied but copying heap is expensive, instead Rust moves those.
 
 # Ownership
 In Rust, ownership rules govern how memory is managed and accessed, ensuring memory safety without the need for a garbage collector. The key ownership rules are:
@@ -89,6 +89,9 @@ e.g. ` let Person { name, ref age } = person;`
         &s[..1]
     }
 ```
+
+# A Note about cloning vs using references
+- Clone means full copy and as such more time and memory is used; however, it migth be more straight forward than using refrences and not to have to worry about managing lifetimes.
 
 # Compound Type
 ## str, &str and String
@@ -433,4 +436,3 @@ Benefits of ownership:
 # Cargo
 - `cargo check` is faster than `cargo build` useful when you want to see whether code can compile
 - `cargo build --release` is a lengthier process that does some optimizations. When benchmarking code use the release verison
-- 

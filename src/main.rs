@@ -1,6 +1,6 @@
 use std::env;
 
-use crate::minigrep::minigrap;
+use minigrep::Config;
 
 mod guessing_game;
 mod hempcrete_community;
@@ -46,7 +46,7 @@ fn main() {
 
     //-----
     // minigrep
-    let (query, filepath) = minigrep::parse_config(&args);
+    let config = Config::new(&args);
 
-    minigrep::minigrap(query, filepath);
+    minigrep::minigrep(config);
 }

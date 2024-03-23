@@ -1,17 +1,23 @@
 use std::fs;
+pub struct Config {
+    query: String,
+    file_path: String
+}
 
-pub fn minigrap(query: &String, file_path: &String) {
-    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file!");
+pub fn minigrep(config: Config) {
+    let contents = fs::read_to_string(config.file_path).expect("Should have been able to read the file!");
 
     println!("with text \n {contents}");
 }
 
-pub fn parse_config(args: &[String]) -> (&String, &String) {
-    let query = &args[1];
-    let filepath = &args[2];
-
-    println!("Searching for string {query}");
-    println!("In file: {filepath}");
-
-    return (query, filepath);
+impl Config {
+    pub fn new(args: &[String]) -> Config {
+        if args.len() < 3 {
+            panic!("Not enough arguments are provided in the command line!");
+        }
+        Config {
+            query: args[1].clone(),
+            file_path: args[2].clone()
+        }
+    }
 }
