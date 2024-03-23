@@ -58,5 +58,5 @@ fn find_maximum_length_from_index(nums: Vec<i32>, curr: usize) -> i32 {
             return nums.len() as i32;
         }
         return find_maximum_length_from_index(nums, curr + 1);
-    }
+     }
 }
