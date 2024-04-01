@@ -377,6 +377,7 @@ Benefits of ownership:
 
 3. Semantic clarity: Converting between borrowed and owned types explicitly communicates ownership and intent within your code.
 
+Noste: that the lifetime parameters specify which argument lifetime is connected to the lifetime of the return value
 - if not specified an integer by default is of type `i32`
 
 
@@ -436,3 +437,9 @@ Benefits of ownership:
 # Cargo
 - `cargo check` is faster than `cargo build` useful when you want to see whether code can compile
 - `cargo build --release` is a lengthier process that does some optimizations. When benchmarking code use the release verison
+
+# Env vars example
+- see `minigrep.rs` for how env var is brought in
+- example usage: 
+`IGNORE_CASE=1 cargo run -- to poem.txt`
+- `Remove-Item Env:IGNORE_CASE` to remove env var
