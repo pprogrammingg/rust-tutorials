@@ -363,6 +363,24 @@ When working with generics, the type parameters often must use traits as bounds 
 
 # Closures
 - One difference with named functions is that closures can capture value from the parent scope
+- Self is passed to closures automatically   
+- Closures can take params by reference, mutable reference or just take ownership
+- Example of closure using mutable ref
+```rust
+    fn main() {
+        let mut list = vec![1, 2, 3];
+        println!("Before defining closure: {:?}", list);
+
+        let mut borrows_mutably = || list.push(7);
+        // Cannot borrow the value again, as it is mutably referenced by closure. 
+        // For example, we cannot use it for println
+        borrows_mutably();
+        println!("After calling closure: {:?}", list);
+    }
+```
+- `move` keyword to give ownership is barely used. Thread is an example where a variable is moved to a thread from the context of current thread.
+- How closure body uses the vars it captures, it will dictate which Fn traits it implements.
+- in Option `unwrap_or_else` defintition, using `FnOnce` in the trait bound expresses the constraint that unwrap_or_else is only going to call f at most one time.
 
 # Constants vs Static
 - Constants: immutable and value must be known at compile time, their access depends on scope.

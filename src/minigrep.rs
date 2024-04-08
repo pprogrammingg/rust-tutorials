@@ -1,4 +1,4 @@
-use std::{error::Error, fs, env};
+use std::{env, error::Error, fs};
 
 pub struct Config {
     query: String,
@@ -7,16 +7,29 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments in the command line!");
-        }
+    /* build - iterators over a list of arguments from the environment
+    and extracts ones needed for the config structure
+    input: args - impl Iterator<Item = String>
+    returns Result<Config, &'static str> */
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        args.next(); // name of the program
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("did not get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("did not get a file_path string"),
+        };
 
         let ignore_case = env::var("IGNORE_CASE").is_ok();
+
         Ok(Config {
-            query: args[1].clone(),
-            file_path: args[2].clone(),
-            ignore_case
+            query,
+            file_path,
+            ignore_case,
         })
     }
 }

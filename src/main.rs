@@ -12,10 +12,7 @@ use practice_rust::minigrep::{self, *};
 // use practice_rust::leetcode::*;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
     // dbg!(&args);
-
-    ();
 
     // Run the multi-threaded Rust example
 
@@ -37,7 +34,7 @@ fn main() {
 
     //-----minigrep
 
-    let config = Config::build(&args).unwrap_or_else(|err| {
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing the args, {err}");
         process::exit(1)
     });
@@ -62,7 +59,4 @@ fn main() {
     // assert!(find_maximum_length(nums) == 4, "test 4 failed!");
 
     // println!("All tests pass!");
-
-
-
 }
