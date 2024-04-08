@@ -461,3 +461,9 @@ Noste: that the lifetime parameters specify which argument lifetime is connected
 - example usage: 
 `IGNORE_CASE=1 cargo run -- to poem.txt`
 - `Remove-Item Env:IGNORE_CASE` to remove env var
+
+
+## Iterators for more functional style of programming
+- Chapter 13.3 of Rust book states:
+`We can write this code in a more concise way using iterator adaptor methods. Doing so also lets us avoid having a mutable intermediate results vector. The functional programming style prefers to minimize the amount of mutable state to make code clearer. Removing the mutable state might enable a future enhancement to make searching happen in parallel, because we wouldn’t have to manage concurrent access to the results vector`
+0

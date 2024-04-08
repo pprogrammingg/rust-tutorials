@@ -50,16 +50,13 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+// search - takes advantage of iterators to read line by line. Iterators create
+// a better functional programming style, suited for parallelization 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    // read content line by line
-    // if line contains the query, put it in result vector
-    let mut result = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            result.push(line);
-        }
-    }
-    result
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
