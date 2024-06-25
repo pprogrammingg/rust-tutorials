@@ -463,7 +463,20 @@ Noste: that the lifetime parameters specify which argument lifetime is connected
 - `Remove-Item Env:IGNORE_CASE` to remove env var
 
 
-## Iterators for more functional style of programming
+# Iterators for more functional style of programming
 - Chapter 13.3 of Rust book states:
 `We can write this code in a more concise way using iterator adaptor methods. Doing so also lets us avoid having a mutable intermediate results vector. The functional programming style prefers to minimize the amount of mutable state to make code clearer. Removing the mutable state might enable a future enhancement to make searching happen in parallel, because we wouldn’t have to manage concurrent access to the results vector`
-0
+
+# Cell, RefCell, Atomic Ref Cell and Inner Mutability
+- Watched parts of [Jon Gjengset](https://www.youtube.com/watch?v=8O0Nt9qY_vo)
+- Cell:
+    - Cell -> impl with UnsafeCell type to enforce non-sharable between threads and something that does not give away pointer to the inner value.
+    - Cells have the benefit of allowing them to be shared between multiple owners and provide ways to mutate the inner value (in a single thread)
+- RefCell:
+    - Dynamic check borrowing - great usecase for graphs and trees
+    - keeps track of references
+    - Can impl burrow and burrow_mut by stating that if there are no exclusive references, then can be burrowed immutably and only way to be immutably burrowed is to have exclusive reference (ref count = 1)
+- RC:
+    - Similar tp Refcell but does not allow mutability
+- 
+       
