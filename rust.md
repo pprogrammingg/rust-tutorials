@@ -478,5 +478,105 @@ Noste: that the lifetime parameters specify which argument lifetime is connected
     - Can impl burrow and burrow_mut by stating that if there are no exclusive references, then can be burrowed immutably and only way to be immutably burrowed is to have exclusive reference (ref count = 1)
 - RC:
     - Similar tp Refcell but does not allow mutability
-- 
+
+# Rust Async/Await Overview
+
+## Rust Async Fundamentals
+- **`async` and `await`:**
+  - `async` transforms a function into one that returns a `Future<Output = T>`, where `T` is the return type.
+  - `await` pauses execution until the `Future` is ready (resolved or completed), but **doesn't block** the thread. It allows other tasks to run while waiting.
+
+## Futures in Rust
+- A **`Future`** represents a computation that hasn’t finished yet.
+- When calling an `async fn`, it returns a **`Future<Output = T>`**.
+- Futures are **lazy**, meaning they don't do anything until they are polled (using `await` or manually polling them).
+
+## Pinning and Polling
+- The async runtime polls futures to make progress.
+- **Pinning** ensures that the future remains in memory at a fixed location because async functions can be suspended and resumed at different times.
+
+## Concurrency with `select!`
+- **`select!`** waits for **multiple futures** at once, allowing you to respond to whichever future completes first.
+- Only **one** future will complete at a time; it’s useful when you have several tasks that can make progress independently, but you don’t need all to finish.
+- Useful for multiplexing I/O or handling different events (like WebSocket messages or timer events).
+
+## Parallelism with `join!`
+- **`join!`** runs multiple futures **concurrently**, but waits for **all** of them to complete.
+- All futures are polled concurrently, making it ideal for situations where you want tasks to run in parallel but require all results before proceeding.
+- Example: Fetching data from multiple sources and using the results together once all have arrived.
+
+---
+
+## `select!` vs `join!`
+
+- **`select!`:**
+  - Only one future completes at a time; useful when you need to **react** to events or messages in real-time.
+  - The remaining futures are canceled when the first one completes.
+  - Comes from the **`futures`** crate and is often used in **Tokio** or other async runtimes, but isn’t part of the standard library.
+
+- **`join!`:**
+  - All futures run concurrently, and the program waits until all of them complete.
+  - All futures continue to run, regardless of which finishes first.
+  - Comes from the **`futures`** crate or async runtimes like **Tokio**.
+
+---
+
+## Spawning Async Tasks
+
+- **`tokio::spawn`:**
+  - Spawns a lightweight **task** that runs on an async runtime (like Tokio).
+  - Tasks are **cooperatively scheduled**, meaning they yield control to the runtime when waiting for I/O or other async operations.
+  - This enables **concurrent** execution, where multiple tasks share the same thread and make progress by switching between them.
+  - Tasks don’t run in parallel, but **concurrently** on the same thread or across multiple threads (depending on the runtime configuration).
+
+- **`thread::spawn`:**
+  - Spawns a new **OS thread** for the task.
+  - Threads run in **parallel**, each with its own stack, and the operating system handles preemptive scheduling.
+  - OS threads are heavier than async tasks because they require more resources (memory for stacks) and are less efficient when running large numbers of tasks.
+
+---
+
+## Parallelism vs Concurrency
+
+- **Concurrency:**
+  - Tasks are scheduled cooperatively by the runtime. They take turns running, yielding when waiting for something (like I/O).
+  - **`tokio::spawn`** is an example of concurrency. Multiple tasks share the same thread, and the runtime switches between them without running them simultaneously.
+  - **Cooperative scheduling** ensures that tasks run only when they're ready, leading to more efficient I/O-bound tasks.
+
+- **Parallelism:**
+  - Tasks run **simultaneously** on separate threads or processors.
+  - **`thread::spawn`** enables parallelism, as it creates a separate OS thread for each task.
+  - Suitable for CPU-bound operations where multiple tasks can use separate cores for true parallel execution.
+
+---
+
+## Task Scheduling
+
+- **`tokio::spawn` (async tasks)**:
+  - **Cooperatively scheduled**: Tasks yield control when idle (e.g., waiting for I/O), which allows for concurrency. Multiple tasks can make progress without using multiple OS threads.
+  - **Concurrency**, not true parallelism unless explicitly configured to use multiple worker threads.
+
+- **`thread::spawn` (OS threads)**:
+  - **Preemptively scheduled**: The OS can interrupt a thread and switch between them, achieving true parallel execution.
+  - **Parallelism**, as tasks run on different threads at the same time.
+
+---
+
+## Runtime Differences
+
+- **Standard Library (`std`) vs `Tokio`:**
+  - The **`std::thread::spawn`** and **`std::future::Future`** are part of Rust’s standard library.
+  - However, **`async/await`, `select!`, `join!`, and `tokio::spawn`** are not part of the standard library. They require an async runtime like **Tokio**, **async-std**, or the **`futures`** crate to function.
+  - These runtimes provide additional functionality, like task scheduling, I/O handling, timers, and utilities for running async code efficiently.
+
+---
+
+## `tokio::main` Macro
+
+- The **`tokio::main`** macro is a convenient attribute that sets up an async context inside the `main` function.
+  - When you mark a function with `#[tokio::main]`, it effectively **wraps the `main` function** in a **Tokio runtime**.
+  - It allows you to write an async `main` function (e.g., `async fn main() { ... }`), making it easy to run asynchronous code right from the entry point.
+  - It initializes the async runtime and spawns the async tasks.
+  - Depending on the **`flavor`** you choose (e.g., `multi_thread` or `current_thread`), it will configure how the runtime manages tasks and threads.
+
        
