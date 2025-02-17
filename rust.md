@@ -648,9 +648,23 @@ fn unique_ordered_set(input: &Vec<i32>) -> Vec<i32> {
 
 ```
 
-## Stirng Manipulation
+
+<!-- Feb 2025 CheatSheet -->
+# Stirng Manipulation
 - for (i, char) in some_string.char_indecies() // i here is byte position, so unicode char can take more bytes, hence i is not linearly increasing
 - for (i, char) in some_string.chars().enumerate() // i is char index strictly
+- lower_case
+    - to_ascii_lowercase() faster/works only with ascii, to_lowercase() works with unicode also, but need to use `next().unwrap()` to go through different lowercases of the same char as the result slower
 
-## Vector
+# Vector
 - for (i, e) in some_vector.iter().enumerate()
+- Vec<char> to String 
+
+```rust
+    let list = Vec!::new(['a', 'b', 'c']);
+    let list_stringified = list.iter().collect();
+```
+
+# Loops and Iterators
+
+# Multi-Threading and Concurrency Summary
