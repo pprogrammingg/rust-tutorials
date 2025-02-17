@@ -329,7 +329,7 @@ fn main() {
 - Similar to interfaces in some programming languages, a trait tells the Rust compiler about functionality a particular type has and can share with other types. We can use traits to define shared behavior in an abstract way. We can use trait bounds to specify that a generic type can be any type that has certain behavior.
 - `Derive` macro to bring some automatic implemenations of traits
 - Operator overload: the + operator in a + b calls the add method (as in a.add(b))
-- Trait can be passed as function param , e.g. take any type that implemenents a certain trait
+- Trait can be passed as function param , e.g. take any type that implements a certain trait
 
 ```rust
     fn myFunc(x: &impl some_trait){
@@ -339,11 +339,12 @@ fn main() {
 - Trait bounds are declared like genereic and put bound on generic types
 ```rust
 
-    fn myFunc<T>(x: &impl some_trait, y: &impl some_trait){
+    // function args can be different types but should implement the same trait
+    fn myFunc(x: &impl some_trait, y: &impl some_trait){
 
     }
 
-    // can use this instead
+    // function args should be the same type AND implement the same trait
     fn myFunc<T: some_trait>(x: &T, y: &T) -> i32{}
 
     // can combine trait bounds
@@ -354,6 +355,19 @@ fn main() {
 
     // trait bound for return type
     fn myFunc() -> impl Animal {}
+
+    // use lifetime and traitbounds
+    fn greet_longer<'a, T: Greet + 'a>(x: &'a T) {
+      println!("{}", x.greet());
+    }
+
+    // dynamic dispatch
+    fn greet_dyn(x: &dyn Greet) {
+      println!("{}", x.greet());
+    }
+
+    let person = Person;
+    greet_dyn(&person)
 ```
 - Note: use Trait Objects instead when you really need to return several types. Trait objects are essentially pointers to any type that implements that trait, whose precise type is only know at run-time. Syntax `Box<dyn Animal>` , why `Box` why not `&dyn Animal`
 
@@ -579,4 +593,64 @@ Noste: that the lifetime parameters specify which argument lifetime is connected
   - It initializes the async runtime and spawns the async tasks.
   - Depending on the **`flavor`** you choose (e.g., `multi_thread` or `current_thread`), it will configure how the runtime manages tasks and threads.
 
-       
+# Fat Pointers
+In Rust, a fat pointer is a pointer that carries extra information beyond just the memory address. 
+Fat pointers are used when the size or layout of the data being referenced isn't known at compile time. 
+There are two common situations where Rust uses fat pointers:
+
+## Trait Objects `&dyn trait`
+When you use a trait object (e.g., &dyn SomeTrait), Rust doesn't know at compile time which 
+specific type will be behind that trait. A fat pointer is used to store:
+
+1. A pointer to the actual data (the concrete type that implements the trait). 
+2. A pointer to a vtable (virtual method table) that holds information about the 
+    methods defined in the trait for the concrete type.
+
+## Slices (&[T])
+Slices, like &[T], are another example of fat pointers. The size of a slice ([T]) is unknown at compile time, so a fat pointer is used to store:
+A pointer to the start of the slice.
+The length of the slice (i.e., the number of elements in it).
+
+1. A pointer to the start of the slice.
+2. The length of the slice (i.e., the number of elements in it).
+
+### Why are they called "fat" pointers? and what are they used for?
+They're called "fat" because they carry more than just the address of the data. A regular or "thin" pointer (like &T) only holds the memory address, while a fat pointer holds both a pointer to the data and additional 
+information (e.g., vtable pointer for trait objects, length for slices).
+
+Rust uses these fat pointers behind the scenes to enable dynamic behavior and handling of unsized types like trait objects and slices while 
+ensuring performance and memory safety.
+
+
+## Some Topics to Learn/Expand on
+- How does Rust achieve memory safety?
+- What is stack vs heap in Rust? What happens when a Vec object is declared? Syscalls what are they and talk about them in terms of efficient Rust program? What are atomic types?
+- What are some popular datastructures in STD lib?
+- Asynchronous Rust, tasks and thread (pros and cons)
+- What are "fat pointers"? What is "VLookup" table?
+- BTreeSets are great for converting a Vec to ordered and unique
+- often working with Vec might get int to situtation where item type is a reference eventhough a primitive type
+like `&Vec<&i32>`, this can be converted to non-referenced version by using `.copied` 
+
+e.g in the below exmaple without `.copied` we end up with `Vec<&i32>`
+```rust
+fn unique_ordered_set(input: &Vec<i32>) -> Vec<i32> {
+    
+      // Convert Vec to BTreeSet to get unique, sorted numbers
+      let unique_seq: BTreeSet<&i32> = input.into_iter().collect();
+
+      // If needed, you can convert back to Vec
+      let unique_sorted_vec: Vec<i32> = unique_seq.into_iter().copied().collect();
+
+
+      unique_sorted_vec
+}
+
+```
+
+## Stirng Manipulation
+- for (i, char) in some_string.char_indecies() // i here is byte position, so unicode char can take more bytes, hence i is not linearly increasing
+- for (i, char) in some_string.chars().enumerate() // i is char index strictly
+
+## Vector
+- for (i, e) in some_vector.iter().enumerate()

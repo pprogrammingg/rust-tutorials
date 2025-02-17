@@ -1,6 +1,6 @@
 use std::{env, process};
 
-use practice_rust::minigrep::{self, *};
+use practice_rust::{minigrep::{self, *}, sort_vowel::{self, sort_vowels}};
 
 // use guessing_game::guessing_game;
 // use hempcrete_community::build_hempcrete_community;
@@ -34,15 +34,25 @@ fn main() {
 
     //-----minigrep
 
-    let config = Config::build(env::args()).unwrap_or_else(|err| {
-        eprintln!("Problem parsing the args, {err}");
-        process::exit(1)
-    });
+    // let config = Config::build(env::args()).unwrap_or_else(|err| {
+    //     eprintln!("Problem parsing the args, {err}");
+    //     process::exit(1)
+    // });
 
-    if let Err(e) = minigrep::run(config) {
-        eprintln!("Application Error {e}");
-        process::exit(1);
-    }
+    // if let Err(e) = minigrep::run(config) {
+    //     eprintln!("Application Error {e}");
+    //     process::exit(1);
+    // }
+
+    const STR_WITH_VOWLES_1: &str= "ardvork";
+    const STR_WITH_VOWLES_2: &str= "pomudra";
+    const STR_WITH_VOWLES_3: &str= "bccéoîPPöddüá";
+
+    sort_vowels(STR_WITH_VOWLES_1);
+    sort_vowels(STR_WITH_VOWLES_2);
+    sort_vowels(STR_WITH_VOWLES_3);
+
+    
 
     // find_maximum_length
     // find maximum non_decreasing length of array
@@ -59,4 +69,6 @@ fn main() {
     // assert!(find_maximum_length(nums) == 4, "test 4 failed!");
 
     // println!("All tests pass!");
+
+
 }

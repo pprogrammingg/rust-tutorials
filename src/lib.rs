@@ -18,3 +18,5 @@ pub mod multi_threaded_mutex;
 pub mod multi_threaded_scope;
 #[allow(warnings)]
 pub mod traits_tutorial;
+#[allow(warnings)]
+pub mod sort_vowel;
